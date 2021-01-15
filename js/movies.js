@@ -76,9 +76,11 @@ const getOptions = {
 fetch("https://apple-veil-game.glitch.me/movies", getOptions)
     .then( response => response.json() )
     .then(data => {
+        console.log(data)
         for (let i=0; i<data.length; i++) {
             createCard(data[i].title, data[i].poster)
         }
+        $("#loading").hide()
     })
     /* review was created successfully */
     .catch( error => console.error(error) ); /* handle errors */
