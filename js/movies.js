@@ -23,48 +23,46 @@ function createCard(movieTitle, poster){
 }
 console.log('test')
 
-// const upObject={
-//     "title": "up",
-//     "rating": "5",
-//     "poster": "https://m.media-amazon.com/images/M/MV5BMTk3NDE2NzI4NF5BMl5BanBnXkFtZTgwNzE1MzEyMTE@._V1_SX300.jpg",
-//     "year": "2009",
-//     "genre": "Animation, Adventure, Comedy, Family",
-//     "director": "Pete Docter, Bob Peterson(co-director)",
-//     "plot": "78-year-old Carl Fredricksen travels to Paradise Falls in his house equipped with balloons, inadvertently taking a young stowaway.",
-//     "actors": "Edward Asner, Christopher Plummer, Jordan Nagai, Bob Peterson",
-//     "id": 1
-// }
-//
-//
-// upObject.poster=""
-//
-// function getMovieInfo(movie) {
-//     fetch(`http://www.omdbapi.com/?s=${movie}&apikey=${OMDB_TOKEN}`)
-//         .then(response => response.json())
-//         .then(data => {
-//             console.log(data)
-//             // upObject.poster=data.Search[0].Poster
-//             // console.log(upObject.poster)
-//             // console.log(upObject)
-//             return data.Search[0].imdbID
-//         })
-//         .then(
-//             movieID=>fetch(`https://api.themoviedb.org/3/movie/${movieID}?api_key=${TMDB_TOKEN}&language=en-US`)
-//                 .then(response=>response.json())
-//                 .then(image => {
-//                     console.log(image)
-//                     image.poster_path
-//                 })
-//                 .then(imageLink=>console.log(`https://image.tmdb.org/t/p/w500/${imageLink}`))
-//
-//                 .catch(error => console.log(error))
-//         )
-//         /* review was created successfully */
-//         .catch(error => console.error(error)); /* handle errors */
-// }
-//
-// getMovieInfo("Tenet")
-// console.log(upObject)
+
+//This function takes a text input, and plugs it into the OMDB API. The OMDB API only returns information for full words. If the API detects a full word,
+//it pushes all of the movies that it detects containing that word onto an array. This function is grabbing all of those returned movies from the API, and returning them
+//as an array.
+
+function retrieveSearchedMovies(movie) {
+    var movieInfo=[]
+    fetch(`http://www.omdbapi.com/?s=${movie}&apikey=${OMDB_TOKEN}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.Response==="True") {
+                console.log(data)
+                for (let i = 0; i < data.Search.length; i++) {
+                    movieInfo.push(data.Search[i])
+                }
+            }
+            return data
+        })
+
+        //this commented out promise takes the movies provided by the OMDB API,. accesses the TMDB API, and grabs each movies genre.
+        // .then(data=> {
+        //         // console.log(data)
+        //         if (data.Response==="True") {
+        //             for (let i = 0; i < data.Search.length; i++) {
+        //                 fetch(`https://api.themoviedb.org/3/movie/${data.Search[i].imdbID}?api_key=${TMDB_TOKEN}&language=en-US`)
+        //                     .then(response => response.json())
+        //                     .then(image => {
+        //                         movieInfo[i].genre = image.genres
+        //                         return image;
+        //                     })
+        //                     .catch(error => console.log(error))
+        //             }
+        //         }
+        //         return data
+        //     })
+        // /* review was created successfully */
+        .catch(error => console.error(error)); /* handle errors */
+    return movieInfo
+}
+
 
 const getOptions = {
     method: 'GET',
@@ -73,19 +71,33 @@ const getOptions = {
     },
     // body: JSON.stringify(reviewObj),
 };
+
+//This promise loads the movies from glitch, and makes a card for each movie in the JSON file.
 fetch("https://apple-veil-game.glitch.me/movies", getOptions)
     .then( response => response.json() )
     .then(data => {
-        console.log(data)
         for (let i=0; i<data.length; i++) {
             createCard(data[i].title, data[i].poster)
         }
+        //This hides the loading div, which was running up until all of the cards were generated.
         $("#loading").hide()
     })
     /* review was created successfully */
     .catch( error => console.error(error) ); /* handle errors */
 
+//This jquery event listener tracks any typing in the add-movie input bar, and runs the retrieveSearchedMovies() function to grab any matches from OMDB API
+$("#newMovieInput").keypress(function(event){
+    let movieSearch=$("#newMovieInput").val();
+    movieSearch.replace(' ', "+")
+    let suggestedMovies=retrieveSearchedMovies(movieSearch)
 
+    console.log(suggestedMovies)
+    // if (suggestedMovies[0].Title){
+    //     console.log()
+    //     $("#searchResults").html(suggestedMovies[0].Title)
+    // }
+
+})
 
 
 
