@@ -24,10 +24,13 @@
                 <button type="button" class="btn btn-success"><span>Search</span></button>
             </div>
         </div>
-        <div class="input-group search-box">
-            <input type="text" class="form-control">
+        <div class="input-group search-box" id="newMovieDiv">
+            <input type="text" class="form-control" id="newMovieInput">
             <div class="input-group-append">
                 <button type="button" class="btn btn-success"><span>Search</span></button>
+            </div>
+            <div id="searchResults">
+
             </div>
         </div>
     </form>
@@ -64,48 +67,49 @@
                     All Movies
                 </div>
                 <div id="allRow" class="row justify-content-center scroll">
-                    <div class="card m-3 col-3 w-auto">
-                        <img src="img/omanyte.png" class="card-img-top" alt="...">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Alice Liddel</h5>
-                            <a href="#" class="btn btn-primary">View Profile</a>
-                        </div>
-                    </div>
-                    <div class="card m-3 col-3 w-auto">
-                        <img src="img/omanyte.png" class="card-img-top" alt="...">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Danyal Ball</h5>
-                            <a href="#" class="btn btn-primary">View Profile</a>
-                        </div>
-                    </div>
-                    <div class="card m-3 col-3 w-auto">
-                        <img src="img/omanyte.png" class="card-img-top" alt="...">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Nia Malone</h5>
-                            <a href="#" class="btn btn-primary">View Profile</a>
-                        </div>
-                    </div>
-                    <div class="card m-3 col-3 w-auto">
-                        <img src="img/omanyte.png" class="card-img-top" alt="...">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Amisha Choi</h5>
-                            <a href="#" class="btn btn-primary">View Profile</a>
-                        </div>
-                    </div>
-                    <div class="card m-3 col-3 w-auto">
-                        <img src="img/omanyte.png" class="card-img-top" alt="...">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Laurie Brandt</h5>
-                            <a href="#" class="btn btn-primary">View Profile</a>
-                        </div>
-                    </div>
-                    <div class="card m-3 col-3 w-auto">
-                        <img src="img/omanyte.png" class="card-img-top" alt="...">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Amelie Rodriquez</h5>
-                            <a href="#" class="btn btn-primary">View Profile</a>
-                        </div>
-                    </div>
+                    <div id="loading" class="loader"></div>
+<!--                    <div class="card m-3 col-3 w-auto">-->
+<!--                        <img src="img/omanyte.png" class="card-img-top" alt="...">-->
+<!--                        <div class="card-body text-center">-->
+<!--                            <h5 class="card-title">Alice Liddel</h5>-->
+<!--                            <a href="#" class="btn btn-primary">View Profile</a>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="card m-3 col-3 w-auto">-->
+<!--                        <img src="img/omanyte.png" class="card-img-top" alt="...">-->
+<!--                        <div class="card-body text-center">-->
+<!--                            <h5 class="card-title">Danyal Ball</h5>-->
+<!--                            <a href="#" class="btn btn-primary">View Profile</a>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="card m-3 col-3 w-auto">-->
+<!--                        <img src="img/omanyte.png" class="card-img-top" alt="...">-->
+<!--                        <div class="card-body text-center">-->
+<!--                            <h5 class="card-title">Nia Malone</h5>-->
+<!--                            <a href="#" class="btn btn-primary">View Profile</a>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="card m-3 col-3 w-auto">-->
+<!--                        <img src="img/omanyte.png" class="card-img-top" alt="...">-->
+<!--                        <div class="card-body text-center">-->
+<!--                            <h5 class="card-title">Amisha Choi</h5>-->
+<!--                            <a href="#" class="btn btn-primary">View Profile</a>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="card m-3 col-3 w-auto">-->
+<!--                        <img src="img/omanyte.png" class="card-img-top" alt="...">-->
+<!--                        <div class="card-body text-center">-->
+<!--                            <h5 class="card-title">Laurie Brandt</h5>-->
+<!--                            <a href="#" class="btn btn-primary">View Profile</a>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="card m-3 col-3 w-auto">-->
+<!--                        <img src="img/omanyte.png" class="card-img-top" alt="...">-->
+<!--                        <div class="card-body text-center">-->
+<!--                            <h5 class="card-title">Amelie Rodriquez</h5>-->
+<!--                            <a href="#" class="btn btn-primary">View Profile</a>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
                 </div>
             <div class="card tab-pane fade" id="favorite">
@@ -210,6 +214,7 @@
     </div>
 </div>
 </div>
+<script src="js/keys.js"></script>
 <script src="js/movies.js"></script>
 </body>
 </html>
