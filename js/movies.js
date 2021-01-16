@@ -21,8 +21,7 @@ function createCard(movieTitle, poster){
     card.append(cardBody)
     allRow.appendChild(card)
 }
-console.log('test')
-
+MicroModal.init()
 
 //This function takes a text input, and plugs it into the OMDB API. The OMDB API only returns information for full words. If the API detects a full word,
 //it pushes all of the movies that it detects containing that word onto an array. This function is grabbing all of those returned movies from the API, and returning them
@@ -98,7 +97,6 @@ $("#newMovieInput").keypress(function(event){
     // }
 
 })
-
 
 
 

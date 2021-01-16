@@ -1,0 +1,7 @@
+{
+  "name": "Movie-API-Kalypso",
+  "version": "1.0.0",
+  "devDependencies": {
+    "micromodal": "^0.4.6"
+  }
+}
