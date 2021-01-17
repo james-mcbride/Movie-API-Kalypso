@@ -1,4 +1,9 @@
 "use strict"
+const movieSearch = document.getElementById('movieSearchButton')
+const movieTitle = document. getElementById('movieTitle')
+const movieYear = document.getElementById('movieYear')
+const movieGenre = document.getElementById('movieGenre')
+const submitMovie = document.getElementById('submitMovie')
 function createCard(movieTitle, poster){
     const allRow = document.getElementById('allRow')
     const card = document.createElement('div')
@@ -11,12 +16,19 @@ function createCard(movieTitle, poster){
     const title = document.createElement('h5');
     title.setAttribute('class','card-title')
     title.innerText = `${movieTitle}` //add Jason object property here
-    const anchor = document.createElement('a')
-    anchor.innerText = 'View Profile'
-    anchor.setAttribute('href','#')
-    anchor.setAttribute('class','btn btn-primary')
+    // const anchor = document.createElement('a')
+    // anchor.innerText = 'View Profile'
+    // anchor.setAttribute('href','#')
+    // anchor.setAttribute('class','btn btn-primary')
+    // anchor.setAttribute('data-micromodal-trigger','modal-2')
+    const button = document.createElement('button')
+    button.setAttribute('type','button')
+    button.setAttribute('class','btn btn-primary')
+    button.setAttribute('data-toggle','modal')
+    button.setAttribute('data-target','#exampleModalCenter')
     cardBody.appendChild(title)
-    cardBody.appendChild(anchor)
+    cardBody.appendChild(button)
+    // cardBody.appendChild(anchor)
     card.appendChild(image)
     card.append(cardBody)
     allRow.appendChild(card)
@@ -26,7 +38,12 @@ MicroModal.init()
 //This function takes a text input, and plugs it into the OMDB API. The OMDB API only returns information for full words. If the API detects a full word,
 //it pushes all of the movies that it detects containing that word onto an array. This function is grabbing all of those returned movies from the API, and returning them
 //as an array.
-
+function autoFillModal(){
+    movieTitle.placeholder = 'test'
+    movieYear.placeholder = 'test'
+    // movieTitle.placeholder = jsonObj.Search[0].Title
+    // movieYear.placeholder = jsonObj.Search[0].Year
+}
 function retrieveSearchedMovies(movie) {
     var movieInfo=[]
     fetch(`http://www.omdbapi.com/?s=${movie}&apikey=${OMDB_TOKEN}`)
@@ -39,7 +56,8 @@ function retrieveSearchedMovies(movie) {
                 }
             }
             return data
-        })
+        }).then(data=>{
+    })
 
         //this commented out promise takes the movies provided by the OMDB API,. accesses the TMDB API, and grabs each movies genre.
         // .then(data=> {
@@ -85,11 +103,10 @@ fetch("https://apple-veil-game.glitch.me/movies", getOptions)
     .catch( error => console.error(error) ); /* handle errors */
 
 //This jquery event listener tracks any typing in the add-movie input bar, and runs the retrieveSearchedMovies() function to grab any matches from OMDB API
-$("#newMovieInput").keypress(function(event){
+$("#newMovieInput").keypress(function movieFind(){
     let movieSearch=$("#newMovieInput").val();
     movieSearch.replace(' ', "+")
     let suggestedMovies=retrieveSearchedMovies(movieSearch)
-
     console.log(suggestedMovies)
     // if (suggestedMovies[0].Title){
     //     console.log()
@@ -98,6 +115,9 @@ $("#newMovieInput").keypress(function(event){
 
 })
 
-
-
+// console.log(movieOption)
+// movieSearch.addEventListener('click',()=>{
+//     console.log('testing')
+//     autoFillModal()
+// })
 

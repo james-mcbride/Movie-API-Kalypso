@@ -30,7 +30,7 @@
         <div class="input-group search-box" id="newMovieDiv">
             <input type="text" class="form-control" id="newMovieInput">
             <div class="input-group-append">
-                <button type="button" class="btn btn-success" data-micromodal-trigger="modal-1" ><span>Search</span></button>
+                <button id="movieSearchButton" type="button" class="btn btn-success" data-micromodal-trigger="modal-1" ><span>Search</span></button>
             </div>
             <div id="searchResults">
 
@@ -75,7 +75,7 @@
 <!--                        <img src="img/omanyte.png" class="card-img-top" alt="...">-->
 <!--                        <div class="card-body text-center">-->
 <!--                            <h5 class="card-title">Alice Liddel</h5>-->
-<!--                            <a href="#" class="btn btn-primary">View Profile</a>-->
+<!--                            <a href="#" class="btn btn-primary" data-micromodal-trigger="modal-1">View Profile</a>-->
 <!--                        </div>-->
 <!--                    </div>-->
 <!--                    <div class="card m-3 col-3 w-auto">-->
@@ -124,7 +124,7 @@
                         <img src="img/omanyte.png" class="card-img-top" alt="...">
                         <div class="card-body text-center">
                             <h5 class="card-title">Shay Rocha</h5>
-                            <a href="#" class="btn btn-primary">View Profile</a>
+                            <a href="#" class="btn btn-primary" data-micromodal-trigger="modal-1">View Profile</a>
                         </div>
                     </div>
                 </div>
@@ -138,7 +138,7 @@
                         <img src="img/omanyte.png" class="card-img-top" alt="...">
                         <div class="card-body text-center">
                             <h5 class="card-title">Zahraa McIntosh</h5>
-                            <a href="#" class="btn btn-primary">View Profile</a>
+                            <a href="#" class="btn btn-primary" data-micromodal-trigger="modal-2">View Profile</a>
                         </div>
                     </div>
                 </div>
@@ -230,27 +230,80 @@
             <main class="modal__content" id="modal-1-content">
                 <form>
                     <div class="form-group">
-                        <label for="movieTitle">Title</label>
+                        <label for="addMovieTitle">Title</label>
                         <!--                        enter result from movie title from APi intp placeholder if possible-->
-                        <input type="text" class="form-control" id="movieTitle" aria-describedby="emailHelp" placeholder="Movie Title">
+                        <input type="text" class="form-control" id="addMovieTitle" aria-describedby="emailHelp" placeholder="Movie Title">
                     </div>
                     <div class="form-group">
-                        <label for="movieYear">Year</label>
-                        <input type="text" class="form-control" id="movieYear" aria-describedby="emailHelp" placeholder="Year Released">
+                        <label for="addMovieYear">Year</label>
+                        <input type="text" class="form-control" id="addMovieYear" aria-describedby="emailHelp" placeholder="Year Released">
                     </div>
                     <div class="form-group">
-                        <label for="movieGenre">Genre</label>
-                        <input type="text" class="form-control" id="movieGenre" aria-describedby="emailHelp" placeholder="Genre">
+                        <label for="addMovieGenre">Genre</label>
+                        <input type="text" class="form-control" id="addMovieGenre" aria-describedby="emailHelp" placeholder="Genre">
                     </div>
                 </form>
             </main>
             <footer class="modal__footer">
-                <button id="submitMovie" class="modal__btn modal__btn-primary">Submit</button>
+                <button id="edit" class="modal__btn modal__btn-primary">Edit</button>
                 <button class="modal__btn" data-micromodal-close aria-label="Close this dialog window">Close</button>
             </footer>
         </div>
     </div>
 </div>
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<div class="modal micromodal-slide" id="modal-2" aria-hidden="true">-->
+<!--    <div class="modal__overlay" tabindex="-1" data-micromodal-close>-->
+<!--        <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-2-title">-->
+<!--            <header class="modal__header">-->
+<!--                <h2 class="modal__title" id="modal-2-title">-->
+<!--                    Enter Movie-->
+<!--                </h2>-->
+<!--                <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>-->
+<!--            </header>-->
+<!--            &lt;!&ndash;            add in content to this area&ndash;&gt;-->
+<!--            <main class="modal__content" id="modal-2-content">-->
+<!--                <form>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="Title">Title</label>-->
+<!--                        &lt;!&ndash;                        enter result from movie title from APi intp placeholder if possible&ndash;&gt;-->
+<!--                        <input type="text" class="form-control" id="Title" aria-describedby="emailHelp" placeholder="Movie Title">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="Year">Year</label>-->
+<!--                        <input type="text" class="form-control" id="Year" aria-describedby="emailHelp" placeholder="Year Released">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="Genre">Genre</label>-->
+<!--                        <input type="text" class="form-control" id="Genre" aria-describedby="emailHelp" placeholder="Genre">-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </main>-->
+<!--            <footer class="modal__footer">-->
+<!--                <button id="submitMovie" class="modal__btn modal__btn-primary">Submit</button>-->
+<!--                <button class="modal__btn" data-micromodal-close aria-label="Close this dialog window">Close</button>-->
+<!--            </footer>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 <script>
     MicroModal.init()
 </script>
