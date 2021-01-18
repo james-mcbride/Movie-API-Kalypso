@@ -198,18 +198,13 @@ function postToDatabase(){
         fetch("https://apple-veil-game.glitch.me/movies",postOpt)
             .then(response =>console.log(response))
             .catch(error=>console.log(error))
+    }).then(data=>{
+        fetch("https://apple-veil-game.glitch.me/movies", getOptions)
+            .then(response=>response.json())
+            .then(movies=>{
+                let movie = movies[movies.length-1]
+                createCard(movie.title, movie.poster)
+            })
     })
-
-    //--->>> Fix This so that only the most recent movie is created
-
-    //     .then(data=>{
-    //     fetch("https://apple-veil-game.glitch.me/movies", getOptions)
-    //         .then(response=>response.json())
-    //         .then(movies=>{
-    //             movies(movie=>{
-    //                 createCard(movie.title, movie.poster)
-    //             })
-    //         })
-    // })
 
 }
