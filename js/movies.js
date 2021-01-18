@@ -25,7 +25,7 @@ function createCard(movieTitle, poster){
     button.setAttribute('type','button')
     button.setAttribute('class','btn btn-primary')
     button.setAttribute('data-toggle','modal')
-    button.setAttribute('data-target','#exampleModalCenter')
+    button.setAttribute('data-target','#modal2')
     cardBody.appendChild(title)
     cardBody.appendChild(button)
     // cardBody.appendChild(anchor)
