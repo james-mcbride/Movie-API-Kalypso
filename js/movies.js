@@ -1,9 +1,10 @@
 "use strict"
 const movieSearch = document.getElementById('movieSearchButton')
-const movieTitle = document. getElementById('movieTitle')
-const movieYear = document.getElementById('movieYear')
-const movieGenre = document.getElementById('movieGenre')
+const movieTitle = document. getElementById('addMovieTitle')
+const movieYear = document.getElementById('addMovieYear')
+const movieGenre = document.getElementById('addMovieGenre')
 const submitMovie = document.getElementById('submitMovie')
+let movieID="";
 function createCard(movieTitle, poster){
     const allRow = document.getElementById('allRow')
     const card = document.createElement('div')
@@ -39,11 +40,35 @@ MicroModal.init()
 //it pushes all of the movies that it detects containing that word onto an array. This function is grabbing all of those returned movies from the API, and returning them
 //as an array.
 function autoFillModal(){
-    movieTitle.placeholder = 'test'
-    movieYear.placeholder = 'test'
+    // movieGenre.placeholder = 'test'
+    // movieTitle.placeholder = 'test'
+    // movieYear.placeholder = 'test'
+    let movieSearch=document.getElementById("newMovieInput").value
+    movieSearch.replace(' ', "+")
+    retrieveSearchedMovies(movieSearch)
+
+
+
     // movieTitle.placeholder = jsonObj.Search[0].Title
     // movieYear.placeholder = jsonObj.Search[0].Year
 }
+
+function retrieveSearchedMoviesGenre(){
+    // this commented out promise takes the movies provided by the OMDB API,. accesses the TMDB API, and grabs each movies genre.
+
+    fetch(`https://api.themoviedb.org/3/movie/${movieID}?api_key=${TMDB_TOKEN}&language=en-US`)
+        .then(response => response.json())
+        .then(image => {
+            let genre = image.genres
+            let genreString = ""
+            genre.forEach(element=>genreString+=element.name+" ")
+            movieGenre.placeholder = genreString
+        })
+        .catch(error => console.log(error))
+
+    /* review was created successfully */
+}
+
 function retrieveSearchedMovies(movie) {
     var movieInfo=[]
     fetch(`http://www.omdbapi.com/?s=${movie}&apikey=${OMDB_TOKEN}`)
@@ -55,30 +80,21 @@ function retrieveSearchedMovies(movie) {
                     movieInfo.push(data.Search[i])
                 }
             }
-            return data
-        }).then(data=>{
-    })
+            if (movieInfo.length>0){
+                movieTitle.placeholder = movieInfo[0].Title
+                movieYear.placeholder = movieInfo[0].Year
+                movieID = movieInfo[0].imdbID
+            }
+            console.log(movieID)
+        })
+        .then(data=> retrieveSearchedMoviesGenre())
 
-        //this commented out promise takes the movies provided by the OMDB API,. accesses the TMDB API, and grabs each movies genre.
-        // .then(data=> {
-        //         // console.log(data)
-        //         if (data.Response==="True") {
-        //             for (let i = 0; i < data.Search.length; i++) {
-        //                 fetch(`https://api.themoviedb.org/3/movie/${data.Search[i].imdbID}?api_key=${TMDB_TOKEN}&language=en-US`)
-        //                     .then(response => response.json())
-        //                     .then(image => {
-        //                         movieInfo[i].genre = image.genres
-        //                         return image;
-        //                     })
-        //                     .catch(error => console.log(error))
-        //             }
-        //         }
-        //         return data
-        //     })
-        // /* review was created successfully */
+
         .catch(error => console.error(error)); /* handle errors */
     return movieInfo
 }
+
+
 
 
 const getOptions = {
@@ -103,21 +119,21 @@ fetch("https://apple-veil-game.glitch.me/movies", getOptions)
     .catch( error => console.error(error) ); /* handle errors */
 
 //This jquery event listener tracks any typing in the add-movie input bar, and runs the retrieveSearchedMovies() function to grab any matches from OMDB API
-$("#newMovieInput").keypress(function movieFind(){
-    let movieSearch=$("#newMovieInput").val();
-    movieSearch.replace(' ', "+")
-    let suggestedMovies=retrieveSearchedMovies(movieSearch)
-    console.log(suggestedMovies)
-    // if (suggestedMovies[0].Title){
-    //     console.log()
-    //     $("#searchResults").html(suggestedMovies[0].Title)
-    // }
-
-})
+// $("#newMovieInput").keypress(function movieFind(){
+//     let movieSearch=$("#newMovieInput").val();
+//     movieSearch.replace(' ', "+")
+//     let suggestedMovies=retrieveSearchedMovies(movieSearch)
+//     console.log(suggestedMovies)
+//     // if (suggestedMovies[0].Title){
+//     //     console.log()
+//     //     $("#searchResults").html(suggestedMovies[0].Title)
+//     // }
+//
+// })
 
 // console.log(movieOption)
-// movieSearch.addEventListener('click',()=>{
-//     console.log('testing')
-//     autoFillModal()
-// })
+movieSearch.addEventListener('click',()=>{
+    console.log('testing')
+    autoFillModal()
+})
 
