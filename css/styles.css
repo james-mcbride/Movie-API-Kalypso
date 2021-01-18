@@ -28,3 +28,18 @@ img{
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+#searchResults{
+    position: absolute;
+    width: 268px;
+    top: 40px;
+    background-color: white;
+    z-index: 100;
+
+}
+#searchResults div{
+    border: 1px solid gray;
+}
+#newMovieDiv{
+    position: relative;
+}

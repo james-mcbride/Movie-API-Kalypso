@@ -4,6 +4,8 @@ const movieTitle = document. getElementById('addMovieTitle')
 const movieYear = document.getElementById('addMovieYear')
 const movieGenre = document.getElementById('addMovieGenre')
 const submitMovie = document.getElementById('submitMovie')
+const searchDropdown = document.getElementById("searchResults")
+const newMovieInput = document.getElementById("newMovieInput")
 let movieID="";
 function createCard(movieTitle, poster){
     const allRow = document.getElementById('allRow')
@@ -69,8 +71,33 @@ function retrieveSearchedMoviesGenre(){
     /* review was created successfully */
 }
 
+//this function will grab the top movie match from the add movies search bar, when the search bar is hit.
 function retrieveSearchedMovies(movie) {
     var movieInfo=[]
+    fetch(`http://www.omdbapi.com/?s=${movie}&apikey=${OMDB_TOKEN}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.Response==="True") {
+                for (let i = 0; i < data.Search.length; i++) {
+                    movieInfo.push(data.Search[i])
+                }
+            }
+            if (movieInfo.length>0){
+                movieTitle.placeholder = movieInfo[0].Title
+                movieYear.placeholder = movieInfo[0].Year
+                movieID = movieInfo[0].imdbID
+            }
+        })
+        .then(data=> retrieveSearchedMoviesGenre())
+
+
+        .catch(error => console.error(error)); /* handle errors */
+    return movieInfo
+}
+
+//this function will be run as the search input is typed. It will add add a dropdown suggestion list.
+function searchMoviesDropdown(movie) {
+     let movieInfo=[]
     fetch(`http://www.omdbapi.com/?s=${movie}&apikey=${OMDB_TOKEN}`)
         .then(response => response.json())
         .then(data => {
@@ -81,13 +108,14 @@ function retrieveSearchedMovies(movie) {
                 }
             }
             if (movieInfo.length>0){
-                movieTitle.placeholder = movieInfo[0].Title
-                movieYear.placeholder = movieInfo[0].Year
-                movieID = movieInfo[0].imdbID
+                console.log(movieInfo)
+                let dropdownHTML=""
+                movieInfo.forEach((element, index) => dropdownHTML+=`<div> ${element.Title}</div>`)
+                searchDropdown.innerHTML = dropdownHTML
+
             }
             console.log(movieID)
         })
-        .then(data=> retrieveSearchedMoviesGenre())
 
 
         .catch(error => console.error(error)); /* handle errors */
@@ -118,22 +146,18 @@ fetch("https://apple-veil-game.glitch.me/movies", getOptions)
     /* review was created successfully */
     .catch( error => console.error(error) ); /* handle errors */
 
-//This jquery event listener tracks any typing in the add-movie input bar, and runs the retrieveSearchedMovies() function to grab any matches from OMDB API
-// $("#newMovieInput").keypress(function movieFind(){
-//     let movieSearch=$("#newMovieInput").val();
-//     movieSearch.replace(' ', "+")
-//     let suggestedMovies=retrieveSearchedMovies(movieSearch)
-//     console.log(suggestedMovies)
-//     // if (suggestedMovies[0].Title){
-//     //     console.log()
-//     //     $("#searchResults").html(suggestedMovies[0].Title)
-//     // }
-//
-// })
+//This event listener is waiting for the add movies search bar to be typed in, and will suggest movies as the titles are typed by the user.
+newMovieInput.addEventListener("keyup",() =>{
+    let movieSearchValue=document.getElementById("newMovieInput").value
+    movieSearchValue.replace(' ', "+")
+   searchMoviesDropdown(movieSearchValue)
+
+})
 
 // console.log(movieOption)
 movieSearch.addEventListener('click',()=>{
     console.log('testing')
     autoFillModal()
+
 })
 
