@@ -3,7 +3,8 @@ const movieSearch = document.getElementById('movieSearchButton')
 const movieTitle = document. getElementById('addMovieTitle')
 const movieYear = document.getElementById('addMovieYear')
 const movieGenre = document.getElementById('addMovieGenre')
-const submitMovie = document.getElementById('submitMovie')
+const imdbID = document.getElementById('addImdbID')
+const submitMovie = document.getElementById('submit')
 const searchDropdown = document.getElementById("searchResults")
 const newMovieInput = document.getElementById("newMovieInput")
 let movieID="";
@@ -65,6 +66,7 @@ function retrieveSearchedMoviesGenre(){
             let genreString = ""
             genre.forEach(element=>genreString+=element.name+" ")
             movieGenre.placeholder = genreString
+            movieGenre.value = genreString
         })
         .catch(error => console.log(error))
 
@@ -84,15 +86,18 @@ function retrieveSearchedMovies(movie) {
             }
             if (movieInfo.length>0){
                 movieTitle.placeholder = movieInfo[0].Title
+                movieTitle.value = movieInfo[0].Title
                 movieYear.placeholder = movieInfo[0].Year
+                movieYear.value = movieInfo[0].Year
                 movieID = movieInfo[0].imdbID
+                imdbID.placeholder = movieID
+                imdbID.value = movieID
             }
+            return data
         })
-        .then(data=> retrieveSearchedMoviesGenre())
-
-
-        .catch(error => console.error(error)); /* handle errors */
-    return movieInfo
+        .then(data=> {
+            retrieveSearchedMoviesGenre()
+        })
 }
 
 //this function will be run as the search input is typed. It will add add a dropdown suggestion list.
@@ -133,6 +138,7 @@ const getOptions = {
     // body: JSON.stringify(reviewObj),
 };
 
+
 //This promise loads the movies from glitch, and makes a card for each movie in the JSON file.
 fetch("https://apple-veil-game.glitch.me/movies", getOptions)
     .then( response => response.json() )
@@ -161,3 +167,49 @@ movieSearch.addEventListener('click',()=>{
 
 })
 
+submitMovie.addEventListener('click',()=>{
+    postToDatabase()
+})
+
+function postToDatabase(){
+    let movie = imdbID.value
+    fetch(`http://www.omdbapi.com/?i=${movie}&apikey=${OMDB_TOKEN}`)
+        .then(response => response.json())
+        .then(data => {
+            let movieObj = {
+                title: data.Title,
+                rating: data.Ratings[1],
+                poster: data.Poster,
+                year: data.Year,
+                genre: data.Genre,
+                director: data.Director,
+                plot: data.Plot,
+                actors: data.Actors,
+            }
+            return {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(movieObj)
+            }
+
+        }).then(postOpt=>{
+        fetch("https://apple-veil-game.glitch.me/movies",postOpt)
+            .then(response =>console.log(response))
+            .catch(error=>console.log(error))
+    })
+
+    //--->>> Fix This so that only the most recent movie is created
+
+    //     .then(data=>{
+    //     fetch("https://apple-veil-game.glitch.me/movies", getOptions)
+    //         .then(response=>response.json())
+    //         .then(movies=>{
+    //             movies(movie=>{
+    //                 createCard(movie.title, movie.poster)
+    //             })
+    //         })
+    // })
+
+}
