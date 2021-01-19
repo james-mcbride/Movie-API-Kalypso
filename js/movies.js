@@ -8,7 +8,7 @@ const submitMovie = document.getElementById('submit')
 const searchDropdown = document.getElementById("searchResults")
 const newMovieInput = document.getElementById("newMovieInput")
 let movieID="";
-function createCard(movieTitle, poster){
+function createCard(movieTitle, poster, genre){
     const allRow = document.getElementById('allRow')
     const card = document.createElement('div')
     card.setAttribute('class','card m-3 col-3 w-auto')
@@ -36,6 +36,7 @@ function createCard(movieTitle, poster){
     card.appendChild(image)
     card.append(cardBody)
     allRow.appendChild(card)
+    sortMovieGenre(genre, card)
 }
 MicroModal.init()
 
@@ -115,11 +116,26 @@ function searchMoviesDropdown(movie) {
             if (movieInfo.length>0){
                 console.log(movieInfo)
                 let dropdownHTML=""
-                movieInfo.forEach((element, index) => dropdownHTML+=`<div> ${element.Title}</div>`)
+                movieInfo.forEach((element, index) => {
+                    if (index<=2) {
+                        dropdownHTML += `<div class="dropDownMovie"> ${element.Title}</div>`
+                    }
+                })
                 searchDropdown.innerHTML = dropdownHTML
 
             }
             console.log(movieID)
+        })
+        .then(data=> {
+            // let movieSearchValue=document.getElementById("newMovieInput").value
+            let dropDownElements=document.getElementsByClassName("dropDownMovie")
+            for (let i=0; i<dropDownElements.length; i++){
+                dropDownElements[i].addEventListener("click", ()=>{
+                    document.getElementById("newMovieInput").value=dropDownElements[i].innerText
+                    searchDropdown.innerHTML=""
+
+                })
+            }
         })
 
 
@@ -143,8 +159,9 @@ const getOptions = {
 fetch("https://apple-veil-game.glitch.me/movies", getOptions)
     .then( response => response.json() )
     .then(data => {
+        console.log(data)
         for (let i=0; i<data.length; i++) {
-            createCard(data[i].title, data[i].poster)
+            createCard(data[i].title, data[i].poster, data[i].genre)
         }
         //This hides the loading div, which was running up until all of the cards were generated.
         $("#loading").hide()
@@ -156,7 +173,13 @@ fetch("https://apple-veil-game.glitch.me/movies", getOptions)
 newMovieInput.addEventListener("keyup",() =>{
     let movieSearchValue=document.getElementById("newMovieInput").value
     movieSearchValue.replace(' ', "+")
-   searchMoviesDropdown(movieSearchValue)
+    if (movieSearchValue.length>5) {
+        searchMoviesDropdown(movieSearchValue)
+
+    } else if (movieSearchValue.length===0){
+        searchDropdown.innerHTML=""
+    }
+
 
 })
 
@@ -206,5 +229,59 @@ function postToDatabase(){
                 createCard(movie.title, movie.poster)
             })
     })
-
 }
+
+
+let searchInput=document.getElementById("searchInput")
+searchInput.addEventListener("keyup", ()=>{
+    let searchInputValue=searchInput.value
+    let cards = document.getElementsByClassName("card")
+    for (let i=0; i<cards.length; i++){
+        let currentCardText=cards[i].innerHTML
+        if (currentCardText.indexOf(searchInputValue)===-1){
+            cards[i].style["display"]="none"
+        } else if(searchInputValue===""){
+            cards[i].style["display"]="block"
+        }
+    }
+})
+
+function sortMovieGenre(genre, originalCard){
+
+    let actionRow=document.getElementById("actionRow")
+    let comedyRow=document.getElementById("comedyRow")
+    let dramaRow=document.getElementById("dramaRow")
+    let romanceRow=document.getElementById("romanceRow")
+    let horrorRow=document.getElementById("horrorRow")
+    let fantasyRow=document.getElementById("scififantRow")
+    let movieGenres=genre.split(", ")
+    let actionAdventureCounter=0;
+    let scifiFantasyCounter=0;
+    movieGenres.forEach((element,index) =>{
+        let card=originalCard.cloneNode(true)
+        if (element==="Action" || element==="Adventure"){
+            if (actionAdventureCounter===0) {
+                actionRow.appendChild(card)
+                actionAdventureCounter++
+            }
+        } else if(element==="Comedy"){
+            comedyRow.appendChild(card)
+        } else if(element==="Drama"){
+            dramaRow.appendChild(card)
+        } else if(element==="Romance"){
+            romanceRow.appendChild(card)
+        } else if(element==="Horror"){
+            horrorRow.appendChild(card)
+        } else if(element==="Fantasy" || element==="Sci-Fi"){
+            if (scifiFantasyCounter===0) {
+                fantasyRow.appendChild(card)
+                scifiFantasyCounter++
+            }
+        }
+    })
+}
+
+
+
+
+
