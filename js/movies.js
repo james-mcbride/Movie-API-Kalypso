@@ -293,10 +293,10 @@ function postToDatabase(){
 
 let searchInput=document.getElementById("searchInput")
 searchInput.addEventListener("keyup", ()=>{
-    let searchInputValue=searchInput.value
+    let searchInputValue=searchInput.value.toLowerCase()
     let cards = document.getElementsByClassName("card")
     for (let i=0; i<cards.length; i++){
-        let currentCardText=cards[i].innerHTML
+        let currentCardText=cards[i].innerHTML.toLowerCase()
         if (currentCardText.indexOf(searchInputValue)===-1){
             cards[i].style["display"]="none"
         } else if(searchInputValue===""){
