@@ -8,6 +8,7 @@ const submitMovie = document.getElementById('submit')
 const searchDropdown = document.getElementById("searchResults")
 const newMovieInput = document.getElementById("newMovieInput")
 let movieID="";
+let loadedMovies=[]
 function createCard(movieTitle, poster, genre){
     const allRow = document.getElementById('allRow')
     const card = document.createElement('div')
@@ -162,7 +163,9 @@ fetch("https://apple-veil-game.glitch.me/movies", getOptions)
         console.log(data)
         for (let i=0; i<data.length; i++) {
             createCard(data[i].title, data[i].poster, data[i].genre)
+            loadedMovies.push([data[i].title, data[i].poster, data[i].genre, data[i].rating.Value])
         }
+        console.log(loadedMovies)
         //This hides the loading div, which was running up until all of the cards were generated.
         $("#loading").hide()
     })
@@ -234,10 +237,10 @@ function postToDatabase(){
 
 let searchInput=document.getElementById("searchInput")
 searchInput.addEventListener("keyup", ()=>{
-    let searchInputValue=searchInput.value
+    let searchInputValue=searchInput.value.toLowerCase()
     let cards = document.getElementsByClassName("card")
     for (let i=0; i<cards.length; i++){
-        let currentCardText=cards[i].innerHTML
+        let currentCardText=cards[i].innerHTML.toLowerCase()
         if (currentCardText.indexOf(searchInputValue)===-1){
             cards[i].style["display"]="none"
         } else if(searchInputValue===""){
@@ -280,6 +283,22 @@ function sortMovieGenre(genre, originalCard){
         }
     })
 }
+
+const sortButton=document.getElementById("sortButton")
+sortButton.addEventListener("click", ()=>{
+    let ratedMovies=loadedMovies.map(movie =>{
+        movie[3]= Number(movie[3].slice(0,movie[3].length-1))
+        return movie
+    })
+    let sortedCards=ratedMovies.sort(function(a,b){
+        return Number(b[3])-Number(a[3])
+    })
+    console.log(sortedCards)
+    const allRow = document.getElementById('allRow')
+    allRow.innerHTML=""
+    sortedCards.forEach(element=>createCard(element[0], element[1], element[2]))
+})
+
 
 
 
