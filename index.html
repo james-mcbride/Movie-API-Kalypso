@@ -249,46 +249,65 @@
                 </form>
             </main>
             <footer class="modal__footer">
-                <button id="submit" class="modal__btn modal__btn-primary">Submit</button>
+                <button id="submit" class="modal__btn modal__btn-primary" data-micromodal-close>Submit</button>
                 <button class="modal__btn" data-micromodal-close aria-label="Close this dialog window">Close</button>
             </footer>
         </div>
     </div>
 </div>
-<div class="modal fade" id="modal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal__container">
-            <header class="modal__header">
+<div class="modal fade" id="modal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
                 <h2 class="modal__title" id="modal-1-title2">
                     Enter Movie
                 </h2>
-                <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
-            </header>
-            <div class="modal__content">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
                 <form>
                     <div class="form-group">
-                        <label for="Title">Title</label>
+                        <label for="title">Title</label>
                         <!--                        enter result from movie title from APi intp placeholder if possible-->
-                        <input type="text" class="form-control" id="Title" aria-describedby="emailHelp" placeholder="Movie Title">
+                        <input type="text" class="form-control" id="title" aria-describedby="emailHelp" placeholder="Movie Title">
                     </div>
                     <div class="form-group">
-                        <label for="imdbID">Year</label>
+                        <label for="Title">Rating</label>
+                        <!--                        enter result from movie title from APi intp placeholder if possible-->
+                        <input type="text" class="form-control" id="rating" aria-describedby="emailHelp" placeholder="Movie Rating">
+                    </div>
+                    <div class="form-group">
+                        <label for="imdbID">IMDB id</label>
                         <input type="text" class="form-control" id="imdbID" aria-describedby="emailHelp" placeholder="imdb ID">
                     </div>
                     <div class="form-group">
                         <label for="Year">Year</label>
-                        <input type="text" class="form-control" id="Year" aria-describedby="emailHelp" placeholder="Year Released">
+                        <input type="text" class="form-control" id="year" aria-describedby="emailHelp" placeholder="Year Released">
                     </div>
                     <div class="form-group">
-                        <label for="Genre">Genre</label>
-                        <input type="text" class="form-control" id="Genre" aria-describedby="emailHelp" placeholder="Genre">
+                        <label for="genre">Genre</label>
+                        <input type="text" class="form-control" id="genre" aria-describedby="emailHelp" placeholder="Genre">
+                    </div>
+                    <div class="form-group">
+                        <label for="director">Director</label>
+                        <input type="text" class="form-control" id="director" aria-describedby="emailHelp" placeholder="Director">
+                    </div>
+                    <div class="form-group">
+                        <label for="plot">Plot</label>
+                        <input type="text" class="form-control" id="plot" aria-describedby="emailHelp" placeholder="Plot">
+                    </div>
+                    <div class="form-group">
+                        <label for="actors">Actors</label>
+                        <input type="text" class="form-control" id="actors" aria-describedby="emailHelp" placeholder="Plot">
                     </div>
                 </form>
             </div>
-            <div class="modal__footer">
-                <button id="edit" class="modal__btn modal__btn-primary">Edit</button>
-                <button class="modal__btn" data-micromodal-close aria-label="Close this dialog window">Close</button>
-                <button id="delete" class="modal__btn modal__btn-warning btn-warning">Delete</button>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                <button id="delete" type="button" class="btn btn-secondary" data-dismiss="modal">Delete</button>
             </div>
         </div>
     </div>

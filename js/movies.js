@@ -8,10 +8,19 @@ const submitMovie = document.getElementById('submit')
 const searchDropdown = document.getElementById("searchResults")
 const newMovieInput = document.getElementById("newMovieInput")
 let movieID="";
-function createCard(movieTitle, poster, genre){
+const title = document.getElementById('title')
+const rating = document.getElementById('rating')
+const Year = document.getElementById('year')
+const Genre = document.getElementById('genre')
+const director = document.getElementById('director')
+const plot = document.getElementById('plot')
+const actors = document.getElementById('actors')
+
+function createCard(movieTitle, poster, genre, movieId){
     const allRow = document.getElementById('allRow')
     const card = document.createElement('div')
     card.setAttribute('class','card m-3 col-3 w-auto')
+    card.setAttribute('id',`${movieId}a`)
     const image = document.createElement('img')
     image.setAttribute('src',`${poster}`)//add json property here
     image.setAttribute('class','card-img-top')
@@ -27,11 +36,18 @@ function createCard(movieTitle, poster, genre){
     // anchor.setAttribute('data-micromodal-trigger','modal-2')
     const button = document.createElement('button')
     button.setAttribute('type','button')
-    button.setAttribute('class','btn btn-primary')
+    button.setAttribute('class','btn btn-primary edit')
     button.setAttribute('data-toggle','modal')
     button.setAttribute('data-target','#modal2')
+    button.innerText = 'Information'
+    const deleteButton = document.createElement('button')
+    deleteButton.setAttribute('type','button')
+    deleteButton.setAttribute('class','btn btn-danger delete')
+    deleteButton.setAttribute('id', movieId)
+    deleteButton.innerText = 'Delete'
     cardBody.appendChild(title)
     cardBody.appendChild(button)
+    cardBody.appendChild(deleteButton)
     // cardBody.appendChild(anchor)
     card.appendChild(image)
     card.append(cardBody)
@@ -154,6 +170,9 @@ const getOptions = {
     // body: JSON.stringify(reviewObj),
 };
 
+const deleteMethod = {
+    method: 'DELETE'
+}
 
 //This promise loads the movies from glitch, and makes a card for each movie in the JSON file.
 fetch("https://apple-veil-game.glitch.me/movies", getOptions)
@@ -161,11 +180,51 @@ fetch("https://apple-veil-game.glitch.me/movies", getOptions)
     .then(data => {
         console.log(data)
         for (let i=0; i<data.length; i++) {
-            createCard(data[i].title, data[i].poster, data[i].genre)
+            createCard(data[i].title, data[i].poster, data[i].genre, data[i].id)
         }
         //This hides the loading div, which was running up until all of the cards were generated.
         $("#loading").hide()
+        return [...document.getElementsByClassName('delete')]
+    }).then(buttons=>{
+    buttons.forEach(button=>{
+        let id = button.id
+        button.addEventListener('click',()=>{
+            fetch(`https://apple-veil-game.glitch.me/movies/${id}`, deleteMethod)
+                .then(response=>console.log(response))
+                .catch(error=>console.log(error))
+            let card = document.getElementById(`${id}a`)
+            let row = card.parentNode
+            row.removeChild(card)
+        })
     })
+    return [...document.getElementsByClassName('edit')]
+}).then(editButtons =>{
+    editButtons.forEach(button =>{
+        let sibling = button.nextElementSibling
+        let id = sibling.id
+        button.addEventListener('click',()=>{
+            fetch(`https://apple-veil-game.glitch.me/movies/${id}`, getOptions)
+                .then(response=>response.json())
+                .then(data=>{
+                    console.log(data)
+                    title.placeholder = data.title
+                    title.value = data.title
+                    rating.placeholder = data.rating[1]
+                    rating.value = data.rating[1]
+                    Year.placeholder = data.year
+                    Year.value = data.year
+                    Genre.placeholder = data.genre
+                    Genre.value = data.genre
+                    director.placeholder = data.director
+                    director.value = data.director
+                    plot.placeholder = data.plot
+                    plot.value = data.plot
+                    actors.placeholder = data.actors
+                    actors.value = data.actors
+                })
+        })
+    })
+})
     /* review was created successfully */
     .catch( error => console.error(error) ); /* handle errors */
 
@@ -226,7 +285,7 @@ function postToDatabase(){
             .then(response=>response.json())
             .then(movies=>{
                 let movie = movies[movies.length-1]
-                createCard(movie.title, movie.poster)
+                createCard(movie.title, movie.poster, movie.genre, movie.id)
             })
     })
 }
