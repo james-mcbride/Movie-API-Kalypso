@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="css/micromodal.css">
 </head>
 <body>
-<div class="jumbotron text-center">
+<div class="text-center">
     <h1>Movies</h1>
 </div>
 <div class="container">
@@ -68,6 +68,16 @@
             <div class="card tab-pane fade show active" id="all">
                 <div class="card-header bg-primary text-white">
                     All Movies
+                    <div class="dropdown float-right">
+                        <button class="btn btn-primary dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Filter Movies
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" id="sortButton" href="#">Highest Rating</a>
+                            <a class="dropdown-item" id="alphabetical" href="#">Title: A-Z</a>
+                            <a class="dropdown-item" id="reverseAlphabetical" href="#">Title: Z-A</a>
+                        </div>
+                    </div>
                 </div>
                 <div id="allRow" class="row justify-content-center scroll">
                     <div id="loading" class="loader"></div>

@@ -8,6 +8,7 @@ const submitMovie = document.getElementById('submit')
 const searchDropdown = document.getElementById("searchResults")
 const newMovieInput = document.getElementById("newMovieInput")
 let movieID="";
+let loadedMovies=[]
 const title = document.getElementById('title')
 const rating = document.getElementById('rating')
 const Year = document.getElementById('year')
@@ -15,6 +16,7 @@ const Genre = document.getElementById('genre')
 const director = document.getElementById('director')
 const plot = document.getElementById('plot')
 const actors = document.getElementById('actors')
+const filterButton=document.getElementById("dropdownMenuButton")
 
 function createCard(movieTitle, poster, genre, movieId){
     const allRow = document.getElementById('allRow')
@@ -39,6 +41,7 @@ function createCard(movieTitle, poster, genre, movieId){
     button.setAttribute('class','btn btn-primary edit')
     button.setAttribute('data-toggle','modal')
     button.setAttribute('data-target','#modal2')
+    button.setAttribute("id", `${movieId}b`)
     button.innerText = 'Information'
     const deleteButton = document.createElement('button')
     deleteButton.setAttribute('type','button')
@@ -181,6 +184,7 @@ fetch("https://apple-veil-game.glitch.me/movies", getOptions)
         console.log(data)
         for (let i=0; i<data.length; i++) {
             createCard(data[i].title, data[i].poster, data[i].genre, data[i].id)
+            loadedMovies.push([data[i].title, data[i].poster, data[i].genre, data[i].rating.Value, data[i].id, data[i].year, data[i].director, data[i].plot, data[i].actors])
         }
         //This hides the loading div, which was running up until all of the cards were generated.
         $("#loading").hide()
@@ -339,6 +343,89 @@ function sortMovieGenre(genre, originalCard){
         }
     })
 }
+
+function createSortedCards(sortedCards) {
+    sortedCards.forEach(element => {
+        createCard(element[0], element[1], element[2], element[4])
+        let deleteButton = document.getElementById(element[4])
+        deleteButton.addEventListener("click", () => {
+            let card = document.getElementById(`${element[4]}a`)
+            let row = card.parentNode
+            row.removeChild(card)
+        })
+        let editButton = document.getElementById(`${element[4]}b`)
+        editButton.addEventListener("click", () => {
+            title.placeholder = element[0]
+            title.value = element[0]
+            rating.placeholder = element[3]
+            rating.value = element[3]
+            Year.placeholder = element[5]
+            Year.value = element[5]
+            Genre.placeholder = element[2]
+            Genre.value = element[2]
+            director.placeholder = element[6]
+            director.value = element[6]
+            plot.placeholder = element[7]
+            plot.value = element[7]
+            actors.placeholder = element[8]
+            actors.value = element[8]
+        })
+    })
+}
+
+const alphabetical=document.getElementById("alphabetical")
+alphabetical.addEventListener("click", ()=>{
+    let sortedCards=loadedMovies.sort(function(a, b){
+        if(a[0] < b[0]) { return -1; }
+        if(a[0] > b[0]) { return 1; }
+        return 0;
+    })
+    console.log(sortedCards)
+    const allRow = document.getElementById('allRow')
+    allRow.innerHTML=""
+    createSortedCards(sortedCards)
+    filterButton.innerText=alphabetical.innerText
+
+})
+
+const reverseAlphabetical=document.getElementById("reverseAlphabetical")
+reverseAlphabetical.addEventListener("click", ()=>{
+    let sortedCards=loadedMovies.sort(function(a, b){
+        if(b[0] < a[0]) { return -1; }
+        if(b[0] > a[0]) { return 1; }
+        return 0;
+    })
+    console.log(sortedCards)
+    const allRow = document.getElementById('allRow')
+    allRow.innerHTML=""
+
+    createSortedCards(sortedCards)
+    filterButton.innerText=reverseAlphabetical.innerText
+
+})
+
+const sortButton=document.getElementById("sortButton")
+sortButton.addEventListener("click", ()=>{
+    console.log(loadedMovies)
+    let ratedMovies=loadedMovies.map(movie =>{
+        if (typeof movie[3]!=="undefined") {
+            movie[3] = Number(movie[3].slice(0, movie[3].length - 1))
+        } else{
+            movie[3]=0;
+        }
+        return movie
+    })
+    let sortedCards=ratedMovies.sort(function(a,b){
+        return Number(b[3])-Number(a[3])
+    })
+    console.log(sortedCards)
+    const allRow = document.getElementById('allRow')
+    allRow.innerHTML=""
+    createSortedCards(sortedCards)
+    filterButton.innerText=sortButton.innerText
+
+})
+
 
 
 

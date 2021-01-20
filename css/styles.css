@@ -43,4 +43,8 @@ img{
 #newMovieDiv{
     position: relative;
 }
+.card-header{
+    height: 60px;
+    font-size: x-large;
+}
 
