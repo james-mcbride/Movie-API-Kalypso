@@ -17,7 +17,11 @@ const director = document.getElementById('director')
 const plot = document.getElementById('plot')
 const actors = document.getElementById('actors')
 const filterButton=document.getElementById("dropdownMenuButton")
-
+let informationButtonID=""
+let currentObj={};
+// fetch("https://apple-veil-game.glitch.me/movies/46", {method: 'DELETE'}).then(function (response){
+//    console.log(response);
+//  })
 function createCard(movieTitle, poster, genre, movieId){
     const allRow = document.getElementById('allRow')
     const card = document.createElement('div')
@@ -181,6 +185,7 @@ const deleteMethod = {
 fetch("https://apple-veil-game.glitch.me/movies", getOptions)
     .then( response => response.json() )
     .then(data => {
+        console.log ("data from glitch:")
         console.log(data)
         for (let i=0; i<data.length; i++) {
             createCard(data[i].title, data[i].poster, data[i].genre, data[i].id)
@@ -211,10 +216,17 @@ fetch("https://apple-veil-game.glitch.me/movies", getOptions)
                 .then(response=>response.json())
                 .then(data=>{
                     console.log(data)
+                    currentObj=data;
+                    informationButtonID=data.id
                     title.placeholder = data.title
                     title.value = data.title
-                    rating.placeholder = data.rating[1]
-                    rating.value = data.rating[1]
+                    if (typeof data.rating === "object") {
+                        rating.placeholder = data.rating.Value
+                        rating.value = data.rating.Value
+                    } else{
+                        rating.placeholder = data.rating
+                        rating.value = data.rating
+                    }
                     Year.placeholder = data.year
                     Year.value = data.year
                     Genre.placeholder = data.genre
@@ -423,9 +435,47 @@ sortButton.addEventListener("click", ()=>{
     allRow.innerHTML=""
     createSortedCards(sortedCards)
     filterButton.innerText=sortButton.innerText
-
 })
 
+const saveChangesButton=document.getElementById("saveChanges")
+saveChangesButton.addEventListener("click", ()=>{
+    let changedMovieAttributesObj =currentObj;
+    if (title.placeholder !== title.value){
+        changedMovieAttributesObj.title=title.value;
+    }
+    if (rating.placeholder!== rating.value){
+        changedMovieAttributesObj.rating = rating.value;
+    }
+    if(Year.placeholder !==Year.value) {
+        changedMovieAttributesObj.year=Year.value;
+    }
+    if (Genre.placeholder !==Genre.value){
+        changedMovieAttributesObj.genre=Genre.value;
+    }
+    if(director.placeholder !== director.value) {
+        changedMovieAttributesObj.director=director.value;
+    }
+    if(plot.placeholder!==plot.value){
+        changedMovieAttributesObj.plot=plot.value;
+    }
+    if(actors.placeholder!== actors.value){
+        changedMovieAttributesObj.actors=actors.value
+    }
+    const putOptions = {
+        method: 'put',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(changedMovieAttributesObj),
+    }
+    let id = informationButtonID;
+    console.log(id)
+    console.log(changedMovieAttributesObj)
+    fetch(`https://apple-veil-game.glitch.me/movies/${id}`, putOptions)
+        .then( response => console.log(response) )
+        .catch(error=> console.log(error))
+
+})
 
 
 
