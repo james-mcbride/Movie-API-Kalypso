@@ -48,3 +48,14 @@ img{
     font-size: x-large;
 }
 
+#modalImage{
+    width: 100%;
+    height: auto;
+}
+
+@media (min-width: 576px) {
+    #infoModal {
+        max-width: 1000px;
+        margin: 1.75rem auto;
+    }
+}

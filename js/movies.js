@@ -19,6 +19,7 @@ const actors = document.getElementById('actors')
 const filterButton=document.getElementById("dropdownMenuButton")
 let informationButtonID=""
 let currentObj={};
+let modalImage = document.getElementById("modalImage")
 // fetch("https://apple-veil-game.glitch.me/movies/46", {method: 'DELETE'}).then(function (response){
 //    console.log(response);
 //  })
@@ -217,6 +218,7 @@ fetch("https://apple-veil-game.glitch.me/movies", getOptions)
                 .then(data=>{
                     console.log(data)
                     currentObj=data;
+                    modalImage.setAttribute('src',`${data.poster}`)
                     informationButtonID=data.id
                     title.placeholder = data.title
                     title.value = data.title
