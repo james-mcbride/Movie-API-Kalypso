@@ -190,7 +190,7 @@ fetch("https://apple-veil-game.glitch.me/movies", getOptions)
         console.log(data)
         for (let i=0; i<data.length; i++) {
             createCard(data[i].title, data[i].poster, data[i].genre, data[i].id)
-            loadedMovies.push([data[i].title, data[i].poster, data[i].genre, data[i].rating.Value, data[i].id, data[i].year, data[i].director, data[i].plot, data[i].actors])
+            loadedMovies.push([data[i].title, data[i].poster, data[i].genre, data[i].rating.Value, data[i].id, data[i].year, data[i].director, data[i].plot, data[i].actors, data])
         }
         //This hides the loading div, which was running up until all of the cards were generated.
         $("#loading").hide()
@@ -286,6 +286,7 @@ function postToDatabase(){
                 plot: data.Plot,
                 actors: data.Actors,
             }
+
             return {
                 method: 'POST',
                 headers: {
@@ -301,9 +302,40 @@ function postToDatabase(){
     }).then(data=>{
         fetch("https://apple-veil-game.glitch.me/movies", getOptions)
             .then(response=>response.json())
-            .then(movies=>{
-                let movie = movies[movies.length-1]
+            .then(movies=> {
+                let movie = movies[movies.length - 1]
                 createCard(movie.title, movie.poster, movie.genre, movie.id)
+                loadedMovies.push([movie.title, movie.poster, movie.genre, movie.rating.Value, movie.id, movie.year, movie.director, movie.plot, movie.actors, movie])
+
+
+                function movieEditButtons(element) {
+                    let deleteButton = document.getElementById(element[4])
+                    deleteButton.addEventListener("click", () => {
+                        let card = document.getElementById(`${element[4]}a`)
+                        let row = card.parentNode
+                        row.removeChild(card)
+                    })
+                    let editButton = document.getElementById(`${element[4]}b`)
+                    editButton.addEventListener("click", () => {
+                        modalImage.setAttribute('src', `${element[1]}`)
+                        informationButtonID = element[4]
+                        title.placeholder = element[0]
+                        title.value = element[0]
+                        rating.placeholder = element[3]
+                        rating.value = element[3]
+                        Year.placeholder = element[5]
+                        Year.value = element[5]
+                        Genre.placeholder = element[2]
+                        Genre.value = element[2]
+                        director.placeholder = element[6]
+                        director.value = element[6]
+                        plot.placeholder = element[7]
+                        plot.value = element[7]
+                        actors.placeholder = element[8]
+                        actors.value = element[8]
+                    })
+                }
+                movieEditButtons(loadedMovies[loadedMovies.length-1])
             })
     })
 }
@@ -369,6 +401,8 @@ function createSortedCards(sortedCards) {
         })
         let editButton = document.getElementById(`${element[4]}b`)
         editButton.addEventListener("click", () => {
+            modalImage.setAttribute('src',`${element[1]}`)
+            informationButtonID=element[4]
             title.placeholder = element[0]
             title.value = element[0]
             rating.placeholder = element[3]
