@@ -183,7 +183,7 @@ const deleteMethod = {
 }
 
 //This promise loads the movies from glitch, and makes a card for each movie in the JSON file.
-fetch("https://apple-veil-game.glitch.me/movies", getOptions)
+fetch("https://quartz-fancy-fog.glitch.me/movies", getOptions)
     .then( response => response.json() )
     .then(data => {
         console.log ("data from glitch:")
@@ -199,7 +199,7 @@ fetch("https://apple-veil-game.glitch.me/movies", getOptions)
     buttons.forEach(button=>{
         let id = button.id
         button.addEventListener('click',()=>{
-            fetch(`https://apple-veil-game.glitch.me/movies/${id}`, deleteMethod)
+            fetch(`https://quartz-fancy-fog.glitch.me/movies/${id}`, deleteMethod)
                 .then(response=>console.log(response))
                 .catch(error=>console.log(error))
             let card = document.getElementById(`${id}a`)
@@ -213,7 +213,7 @@ fetch("https://apple-veil-game.glitch.me/movies", getOptions)
         let sibling = button.nextElementSibling
         let id = sibling.id
         button.addEventListener('click',()=>{
-            fetch(`https://apple-veil-game.glitch.me/movies/${id}`, getOptions)
+            fetch(`https://quartz-fancy-fog.glitch.me/movies/${id}`, getOptions)
                 .then(response=>response.json())
                 .then(data=>{
                     console.log(data)
@@ -296,11 +296,11 @@ function postToDatabase(){
             }
 
         }).then(postOpt=>{
-        fetch("https://apple-veil-game.glitch.me/movies",postOpt)
+        fetch("https://quartz-fancy-fog.glitch.me/movies",postOpt)
             .then(response =>console.log(response))
             .catch(error=>console.log(error))
     }).then(data=>{
-        fetch("https://apple-veil-game.glitch.me/movies", getOptions)
+        fetch("https://quartz-fancy-fog.glitch.me/movies", getOptions)
             .then(response=>response.json())
             .then(movies=> {
                 let movie = movies[movies.length - 1]
@@ -507,7 +507,7 @@ saveChangesButton.addEventListener("click", ()=>{
     let id = informationButtonID;
     console.log(id)
     console.log(changedMovieAttributesObj)
-    fetch(`https://apple-veil-game.glitch.me/movies/${id}`, putOptions)
+    fetch(`https://quartz-fancy-fog.glitch.me/movies/${id}`, putOptions)
         .then( response => console.log(response) )
         .catch(error=> console.log(error))
 
