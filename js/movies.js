@@ -20,9 +20,10 @@ const filterButton=document.getElementById("dropdownMenuButton")
 let informationButtonID=""
 let currentObj={};
 let modalImage = document.getElementById("modalImage")
-// fetch("https://apple-veil-game.glitch.me/movies/46", {method: 'DELETE'}).then(function (response){
-//    console.log(response);
-//  })
+let micromodalImage=document.getElementById("micromodalImage");
+ // fetch("https://quartz-fancy-fog.glitch.me/movies/3", {method: 'DELETE'}).then(function (response){
+ //    console.log(response);
+ //  })
 function createCard(movieTitle, poster, genre, movieId){
     const allRow = document.getElementById('allRow')
     const card = document.createElement('div')
@@ -87,11 +88,14 @@ function retrieveSearchedMoviesGenre(){
     fetch(`https://api.themoviedb.org/3/movie/${movieID}?api_key=${TMDB_TOKEN}&language=en-US`)
         .then(response => response.json())
         .then(image => {
+            console.log(image);
             let genre = image.genres
+            let posterPath=image.poster_path;
             let genreString = ""
             genre.forEach(element=>genreString+=element.name+" ")
             movieGenre.placeholder = genreString
             movieGenre.value = genreString
+            micromodalImage.setAttribute('src',`https://image.tmdb.org/t/p/w500/${posterPath}`)
         })
         .catch(error => console.log(error))
 
@@ -104,6 +108,7 @@ function retrieveSearchedMovies(movie) {
     fetch(`http://www.omdbapi.com/?s=${movie}&apikey=${OMDB_TOKEN}`)
         .then(response => response.json())
         .then(data => {
+
             if (data.Response==="True") {
                 for (let i = 0; i < data.Search.length; i++) {
                     movieInfo.push(data.Search[i])
