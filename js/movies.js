@@ -128,6 +128,9 @@ function retrieveSearchedMovies(movie) {
         .then(data=> {
             retrieveSearchedMoviesGenre()
         })
+        .then(()=>{
+            submitMovie.classList.remove("disabled");
+        })
 }
 
 //this function will be run as the search input is typed. It will add add a dropdown suggestion list.
@@ -304,44 +307,49 @@ function postToDatabase(){
         fetch("https://quartz-fancy-fog.glitch.me/movies",postOpt)
             .then(response =>console.log(response))
             .catch(error=>console.log(error))
-    }).then(data=>{
-        fetch("https://quartz-fancy-fog.glitch.me/movies", getOptions)
-            .then(response=>response.json())
-            .then(movies=> {
-                let movie = movies[movies.length - 1]
-                createCard(movie.title, movie.poster, movie.genre, movie.id)
-                loadedMovies.push([movie.title, movie.poster, movie.genre, movie.rating.Value, movie.id, movie.year, movie.director, movie.plot, movie.actors, movie])
+        }).then(data=> {
+        setTimeout(() => {
+            fetch("https://quartz-fancy-fog.glitch.me/movies", getOptions)
+                .then(response => response.json())
+                .then(movies => {
+                    console.log(movies)
+                    let movie = movies[movies.length - 1]
+                    console.log(movie)
+                    createCard(movie.title, movie.poster, movie.genre, movie.id)
+                    loadedMovies.push([movie.title, movie.poster, movie.genre, movie.rating.Value, movie.id, movie.year, movie.director, movie.plot, movie.actors, movie])
 
 
-                function movieEditButtons(element) {
-                    let deleteButton = document.getElementById(element[4])
-                    deleteButton.addEventListener("click", () => {
-                        let card = document.getElementById(`${element[4]}a`)
-                        let row = card.parentNode
-                        row.removeChild(card)
-                    })
-                    let editButton = document.getElementById(`${element[4]}b`)
-                    editButton.addEventListener("click", () => {
-                        modalImage.setAttribute('src', `${element[1]}`)
-                        informationButtonID = element[4]
-                        title.placeholder = element[0]
-                        title.value = element[0]
-                        rating.placeholder = element[3]
-                        rating.value = element[3]
-                        Year.placeholder = element[5]
-                        Year.value = element[5]
-                        Genre.placeholder = element[2]
-                        Genre.value = element[2]
-                        director.placeholder = element[6]
-                        director.value = element[6]
-                        plot.placeholder = element[7]
-                        plot.value = element[7]
-                        actors.placeholder = element[8]
-                        actors.value = element[8]
-                    })
-                }
-                movieEditButtons(loadedMovies[loadedMovies.length-1])
-            })
+                    function movieEditButtons(element) {
+                        let deleteButton = document.getElementById(element[4])
+                        deleteButton.addEventListener("click", () => {
+                            let card = document.getElementById(`${element[4]}a`)
+                            let row = card.parentNode
+                            row.removeChild(card)
+                        })
+                        let editButton = document.getElementById(`${element[4]}b`)
+                        editButton.addEventListener("click", () => {
+                            modalImage.setAttribute('src', `${element[1]}`)
+                            informationButtonID = element[4]
+                            title.placeholder = element[0]
+                            title.value = element[0]
+                            rating.placeholder = element[3]
+                            rating.value = element[3]
+                            Year.placeholder = element[5]
+                            Year.value = element[5]
+                            Genre.placeholder = element[2]
+                            Genre.value = element[2]
+                            director.placeholder = element[6]
+                            director.value = element[6]
+                            plot.placeholder = element[7]
+                            plot.value = element[7]
+                            actors.placeholder = element[8]
+                            actors.value = element[8]
+                        })
+                    }
+
+                    movieEditButtons(loadedMovies[loadedMovies.length - 1])
+                })
+        },100)
     })
 }
 
