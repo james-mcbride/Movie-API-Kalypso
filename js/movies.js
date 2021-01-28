@@ -21,10 +21,13 @@ let informationButtonID=""
 let currentObj={};
 let modalImage = document.getElementById("modalImage")
 let micromodalImage=document.getElementById("micromodalImage");
- // fetch("https://quartz-fancy-fog.glitch.me/movies/3", {method: 'DELETE'}).then(function (response){
- //    console.log(response);
- //  })
-function createCard(movieTitle, poster, genre, movieId){
+//  fetch("https://quartz-fancy-fog.glitch.me/movies/4", {method: 'DELETE'}).then(function (response){
+//     console.log(response);
+//   })
+// fetch("https://quartz-fancy-fog.glitch.me/movies/5", {method: 'DELETE'}).then(function (response){
+//     console.log(response);
+// })
+function createCard(movieTitle, poster, genre, movieId, favorites){
     const allRow = document.getElementById('allRow')
     const card = document.createElement('div')
     card.setAttribute('class','card m-3 col-3 w-auto')
@@ -36,12 +39,7 @@ function createCard(movieTitle, poster, genre, movieId){
     cardBody.setAttribute('class','card-body text-center')
     const title = document.createElement('h5');
     title.setAttribute('class','card-title')
-    title.innerText = `${movieTitle}` //add Jason object property here
-    // const anchor = document.createElement('a')
-    // anchor.innerText = 'View Profile'
-    // anchor.setAttribute('href','#')
-    // anchor.setAttribute('class','btn btn-primary')
-    // anchor.setAttribute('data-micromodal-trigger','modal-2')
+    title.innerText = `${movieTitle}`
     const button = document.createElement('button')
     button.setAttribute('type','button')
     button.setAttribute('class','btn btn-primary edit')
@@ -57,11 +55,39 @@ function createCard(movieTitle, poster, genre, movieId){
     cardBody.appendChild(title)
     cardBody.appendChild(button)
     cardBody.appendChild(deleteButton)
-    // cardBody.appendChild(anchor)
     card.appendChild(image)
     card.append(cardBody)
     allRow.appendChild(card)
     sortMovieGenre(genre, card)
+
+    // const favoriteButton = document.createElement("div")
+    // favoriteButton.setAttribute("class", "click" );
+    // favoriteButton.innerHTML="<span class=\"fa fa-star-o\"></span>\n" +
+    //     "\t<div class=\"ring\"></div>\n" +
+    //     "\t<div class=\"ring2\"></div>\n" +
+    //     "\t<p class=\"info\">Added to favourites!</p>"
+    const favoriteButton = document.createElement("div")
+    if (favorites===true){
+        favoriteButton.setAttribute("class", "favorite" );
+        favoriteButton.setAttribute("id", `${movieId}c`)
+        favoriteButton.innerHTML="<div class=\"click active active-2 active-3\">\n" +
+            "\t<span class=\"fa fa-star\" aria-hidden='\"true\"'></span>\n" +
+            // "\t<div class=\"ring\"></div>\n" +
+            // "\t<div class=\"ring2\"></div>\n" +
+            "\t<p class=\"info\">Added to favourites!</p>\n" +
+            "</div>"
+    } else {
+        favoriteButton.setAttribute("class", "favorite");
+        favoriteButton.setAttribute("id", `${movieId}c`)
+        favoriteButton.innerHTML = "<div class=\"click\">\n" +
+            "\t<span class=\"fa fa-star-o\"></span>\n" +
+            // "\t<div class=\"ring\"></div>\n" +
+            // "\t<div class=\"ring2\"></div>\n" +
+            "\t<p class=\"info\">Added to favourites!</p>\n" +
+            "</div>"
+    }
+    card.append(favoriteButton)
+
 }
 MicroModal.init()
 
@@ -197,8 +223,13 @@ fetch("https://quartz-fancy-fog.glitch.me/movies", getOptions)
         console.log ("data from glitch:")
         console.log(data)
         for (let i=0; i<data.length; i++) {
-            createCard(data[i].title, data[i].poster, data[i].genre, data[i].id)
-            loadedMovies.push([data[i].title, data[i].poster, data[i].genre, data[i].rating.Value, data[i].id, data[i].year, data[i].director, data[i].plot, data[i].actors, data])
+            if ((data[i].favorites)===undefined) {
+                createCard(data[i].title, data[i].poster, data[i].genre, data[i].id, "none")
+                loadedMovies.push([data[i].title, data[i].poster, data[i].genre, data[i].rating.Value, data[i].id, data[i].year, data[i].director, data[i].plot, data[i].actors, data])
+            } else{
+                createCard(data[i].title, data[i].poster, data[i].genre, data[i].id, data[i].favorites)
+                loadedMovies.push([data[i].title, data[i].poster, data[i].genre, data[i].rating.Value, data[i].id, data[i].year, data[i].director, data[i].plot, data[i].actors, data, data[i].favorites])
+            }
         }
         //This hides the loading div, which was running up until all of the cards were generated.
         $("#loading").hide()
@@ -405,7 +436,11 @@ function sortMovieGenre(genre, originalCard){
 
 function createSortedCards(sortedCards) {
     sortedCards.forEach(element => {
-        createCard(element[0], element[1], element[2], element[4])
+        if (element.length>9) {
+            createCard(element[0], element[1], element[2], element[4], element[10])
+        } else{
+            createCard(element[0], element[1], element[2], element[4], "none")
+        }
         let deleteButton = document.getElementById(element[4])
         deleteButton.addEventListener("click", () => {
             let card = document.getElementById(`${element[4]}a`)
@@ -524,6 +559,63 @@ saveChangesButton.addEventListener("click", ()=>{
         .then( response => console.log(response) )
         .catch(error=> console.log(error))
 
+})
+
+//function found online to add button to favorites
+$(document).on("click", ".click", function(){
+// $('.click').click(function() {
+    let clicked = $(this);
+    let id = clicked.parent().attr("id");
+    let movieId=id.slice(0, id.length-1);
+    console.log(movieId)
+    let clickedSpan=$(this).children("span")
+    let clickedInfo=$(this).children(".info")
+    if ($(clickedSpan).hasClass("fa-star")) {
+        $(clicked).removeClass('active')
+        setTimeout(function() {
+            $(clicked).removeClass('active-2')
+        }, 30)
+        $(clicked).removeClass('active-3')
+        setTimeout(function() {
+            $(clickedSpan).removeClass('fa-star')
+            $(clickedSpan).addClass('fa-star-o')
+        }, 15)
+    } else {
+        $(clicked).addClass('active')
+        $(clicked).addClass('active-2')
+        setTimeout(function() {
+            $(clickedSpan).addClass('fa-star')
+            $(clickedSpan).removeClass('fa-star-o')
+        }, 150)
+        setTimeout(function() {
+            $(clicked).addClass('active-3')
+        }, 150)
+        $(clickedInfo).addClass('info-tog')
+        setTimeout(function(){
+            $(clickedInfo).removeClass('info-tog')
+        },1000)
+    }
+
+    if ($(clicked).hasClass("active")) {
+        fetch(`https://quartz-fancy-fog.glitch.me/movies/${movieId}`, getOptions)
+            .then(response => response.json())
+            .then(data => {
+                data.favorites = true;
+                return data;
+            })
+            .then(data => {
+                let putOptions = {
+                    method: 'put',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                }
+                fetch(`https://quartz-fancy-fog.glitch.me/movies/${movieId}`, putOptions)
+                    .then(response => console.log(response))
+                    .catch(error => console.log(error))
+            })
+    }
 })
 
 
