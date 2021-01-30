@@ -390,13 +390,56 @@ function postToDatabase(){
 let searchInput=document.getElementById("searchInput")
 searchInput.addEventListener("keyup", ()=>{
     let searchInputValue=searchInput.value.toLowerCase()
-    let cards = document.getElementsByClassName("card")
+    let navItems=document.getElementsByClassName("nav-link");
+    console.log(navItems)
+    let activeTab="";
+    for (let i=0; i<navItems.length; i++) {
+        if (navItems[i].classList.contains("active")) {
+            activeTab = navItems[i].innerText;
+        }
+    }
+    let cards;
+    switch (activeTab){
+        case "All":
+            cards = document.getElementById("allRow").children;
+            break;
+        case "Favorites":
+            cards = document.getElementById("favoriteRow").children;
+            break;
+        case "Action":
+            cards = document.getElementById("actionRow").children;
+            break;
+        case "Comedy":
+            cards = document.getElementById("comedyRow").children;
+            break;
+        case "Drama":
+            cards = document.getElementById("dramaRow").children;
+            break;
+        case "Romance":
+            cards = document.getElementById("romanceRow").children;
+            break;
+        case "Horror":
+            cards = document.getElementById("horrorRow").children;
+            break;
+        case "Sci-Fi/Fantasy":
+            cards = document.getElementById("scififantRow").children;
+            break;
+    }
+    // navItems.forEach(element=>{
+    //     if (element.hasClass("active")){
+    //         activeTab=element.innerText;
+    //     }
+    // })
+    console.log(cards);
+    // let cards = document.getElementsByClassName("card")
     for (let i=0; i<cards.length; i++){
-        let currentCardText=cards[i].innerHTML.toLowerCase()
-        if (currentCardText.indexOf(searchInputValue)===-1){
-            cards[i].style["display"]="none"
-        } else if(searchInputValue===""){
-            cards[i].style["display"]="block"
+        if (cards[i].classList.contains("card")) {
+            let currentCardText = cards[i].innerHTML.toLowerCase()
+            if (currentCardText.indexOf(searchInputValue) === -1) {
+                cards[i].style["display"] = "none"
+            } else if (searchInputValue === "") {
+                cards[i].style["display"] = "block"
+            }
         }
     }
 })
