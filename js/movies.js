@@ -57,8 +57,7 @@ function createCard(movieTitle, poster, genre, movieId, favorites){
     cardBody.appendChild(deleteButton)
     card.appendChild(image)
     card.append(cardBody)
-    allRow.appendChild(card)
-    sortMovieGenre(genre, card)
+
 
     // const favoriteButton = document.createElement("div")
     // favoriteButton.setAttribute("class", "click" );
@@ -86,7 +85,10 @@ function createCard(movieTitle, poster, genre, movieId, favorites){
             "\t<p class=\"info\">Added to favourites!</p>\n" +
             "</div>"
     }
-    card.append(favoriteButton)
+    card.append(favoriteButton);
+    allRow.appendChild(card)
+    sortMovieGenre(genre, card)
+    addMovieToFavorites(card, favorites);
 
 }
 MicroModal.init()
@@ -434,6 +436,14 @@ function sortMovieGenre(genre, originalCard){
     })
 }
 
+function addMovieToFavorites(originalCard, favoriteBoolean){
+    if (favoriteBoolean===true) {
+        let card = originalCard.cloneNode(true)
+        let favorites = document.getElementById("favoriteRow");
+        favorites.appendChild(card);
+    }
+}
+
 function createSortedCards(sortedCards) {
     sortedCards.forEach(element => {
         if (element.length>9) {
@@ -616,6 +626,8 @@ $(document).on("click", ".click", function(){
                     .catch(error => console.log(error))
             })
     }
+
+
 })
 
 
