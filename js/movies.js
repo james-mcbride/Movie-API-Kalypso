@@ -21,6 +21,7 @@ let informationButtonID=""
 let currentObj={};
 let modalImage = document.getElementById("modalImage")
 let micromodalImage=document.getElementById("micromodalImage");
+let pageLoadedCounter=0;
 //  fetch("https://quartz-fancy-fog.glitch.me/movies/4", {method: 'DELETE'}).then(function (response){
 //     console.log(response);
 //   })
@@ -28,6 +29,7 @@ let micromodalImage=document.getElementById("micromodalImage");
 //     console.log(response);
 // })
 function createCard(movieTitle, poster, genre, movieId, favorites){
+    pageLoadedCounter++;
     const allRow = document.getElementById('allRow')
     const card = document.createElement('div')
     card.setAttribute('class','card m-3 col-3 w-auto')
@@ -87,10 +89,12 @@ function createCard(movieTitle, poster, genre, movieId, favorites){
     }
     card.append(favoriteButton);
     allRow.appendChild(card)
-    sortMovieGenre(genre, card)
-    addMovieToFavorites(card, favorites);
-
+    if (pageLoadedCounter===0) {
+        sortMovieGenre(genre, card)
+        addMovieToFavorites(card, favorites);
+    }
 }
+
 MicroModal.init()
 
 //This function takes a text input, and plugs it into the OMDB API. The OMDB API only returns information for full words. If the API detects a full word,
