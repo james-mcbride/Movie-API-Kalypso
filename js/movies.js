@@ -21,7 +21,7 @@ let informationButtonID=""
 let currentObj={};
 let modalImage = document.getElementById("modalImage")
 let micromodalImage=document.getElementById("micromodalImage");
-let pageLoadedCounter=0;
+let sortingPage=false;
 //  fetch("https://quartz-fancy-fog.glitch.me/movies/4", {method: 'DELETE'}).then(function (response){
 //     console.log(response);
 //   })
@@ -29,7 +29,6 @@ let pageLoadedCounter=0;
 //     console.log(response);
 // })
 function createCard(movieTitle, poster, genre, movieId, favorites){
-    pageLoadedCounter++;
     const allRow = document.getElementById('allRow')
     const card = document.createElement('div')
     card.setAttribute('class','card m-3 col-3 w-auto')
@@ -89,7 +88,7 @@ function createCard(movieTitle, poster, genre, movieId, favorites){
     }
     card.append(favoriteButton);
     allRow.appendChild(card)
-    if (pageLoadedCounter===0) {
+    if (!sortingPage) {
         sortMovieGenre(genre, card)
         addMovieToFavorites(card, favorites);
     }
@@ -492,6 +491,7 @@ function addMovieToFavorites(originalCard, favoriteBoolean){
 }
 
 function createSortedCards(sortedCards) {
+    sortingPage=true;
     sortedCards.forEach(element => {
         if (element.length>9) {
             createCard(element[0], element[1], element[2], element[4], element[10])
@@ -524,6 +524,8 @@ function createSortedCards(sortedCards) {
             actors.value = element[8]
         })
     })
+    sortingPage=false;
+
 }
 
 const alphabetical=document.getElementById("alphabetical")
@@ -623,6 +625,7 @@ $(document).on("click", ".click", function(){
 // $('.click').click(function() {
     let clicked = $(this);
     let id = clicked.parent().attr("id");
+    let card=clicked.parent().parent()[0];
     let movieId=id.slice(0, id.length-1);
     console.log(movieId)
     let clickedSpan=$(this).children("span")
@@ -654,10 +657,42 @@ $(document).on("click", ".click", function(){
     }
 
     if ($(clicked).hasClass("active")) {
+        let favoritesRow=document.getElementById("favoriteRow");
+        let favoritesCard = card.cloneNode(true);
+        favoritesRow.appendChild(favoritesCard);
+
         fetch(`https://quartz-fancy-fog.glitch.me/movies/${movieId}`, getOptions)
             .then(response => response.json())
             .then(data => {
                 data.favorites = true;
+                return data;
+            })
+            .then(data => {
+                let putOptions = {
+                    method: 'put',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                }
+                fetch(`https://quartz-fancy-fog.glitch.me/movies/${movieId}`, putOptions)
+                    .then(response => console.log(response))
+                    .catch(error => console.log(error))
+            })
+    } else{
+        let favoritesRow=document.getElementById("favoriteRow");
+        let favoritesCards = favoritesRow.children;
+        let favoriteCard;
+        for (let i=0; i<favoritesCards.length; i++){
+            if (favoritesCards[i].getAttribute("id")===movieId+"a"){
+                favoriteCard=favoritesCards[i];
+            }
+        }
+        favoritesRow.removeChild(favoriteCard);
+        fetch(`https://quartz-fancy-fog.glitch.me/movies/${movieId}`, getOptions)
+            .then(response => response.json())
+            .then(data => {
+                data.favorites = false;
                 return data;
             })
             .then(data => {
